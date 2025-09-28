@@ -1,3 +1,11 @@
-# Muse Chat 1 - Stage 3.1 Bundle
+# Muse Chat 1
 
-Includes Copilot code review fixes, simplified tests, and cleanup.
+A React chat prototype.
+
+## Development Workflow
+
+- npm start
+- npm test
+- npm run build
+- npx prettier --write .
+- npx eslint src --fix

@@ -1,1 +1,1 @@
-// Updated App component code
+export {}; // placeholder App

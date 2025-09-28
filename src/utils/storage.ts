@@ -1,1 +1,1 @@
-// Storage utils with try/catch JSON.parse and type safety
+export {}; // placeholder Storage
