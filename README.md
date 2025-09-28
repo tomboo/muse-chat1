@@ -1,3 +1,3 @@
-# muse-chat1
+# Muse Chat 1 - Stage 3.1 Bundle
 
-React-based chat prototype.
+Includes Copilot code review fixes, simplified tests, and cleanup.
