@@ -9,16 +9,21 @@ interface MessageType {
 }
 
 const ChatWindow: React.FC = () => {
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>(() => {
+    const saved = localStorage.getItem('chat-messages');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [input, setInput] = useState('');
+  const [botTyping, setBotTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView?.({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollToBottom();
+    localStorage.setItem('chat-messages', JSON.stringify(messages));
   }, [messages]);
 
   const handleSend = () => {
@@ -33,6 +38,7 @@ const ChatWindow: React.FC = () => {
     setMessages((prev) => [...prev, newMessage]);
     setInput('');
 
+    setBotTyping(true);
     // Bot echo after short delay
     setTimeout(() => {
       const botMessage: MessageType = {
@@ -42,7 +48,20 @@ const ChatWindow: React.FC = () => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, botMessage]);
-    }, 500);
+      setBotTyping(false);
+    }, 800);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleClear = () => {
+    setMessages([]);
+    localStorage.removeItem('chat-messages');
   };
 
   return (
@@ -51,15 +70,19 @@ const ChatWindow: React.FC = () => {
         {messages.map((msg) => (
           <Message key={msg.id} text={msg.text} sender={msg.sender} timestamp={msg.timestamp} />
         ))}
+        {botTyping && (
+          <div className="text-sm text-gray-500 italic">Bot is typing…</div>
+        )}
         <div ref={messagesEndRef} />
       </div>
-      <div className="flex">
+      <div className="flex mb-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyPress}
           className="flex-grow border rounded-l px-2 py-1"
-          placeholder="Type a message..."
+          placeholder="Type a message... (Enter to send, Shift+Enter for newline)"
         />
         <button
           onClick={handleSend}
@@ -68,6 +91,12 @@ const ChatWindow: React.FC = () => {
           Send
         </button>
       </div>
+      <button
+        onClick={handleClear}
+        className="text-sm text-red-500 underline"
+      >
+        Clear conversation
+      </button>
     </div>
   );
 };
