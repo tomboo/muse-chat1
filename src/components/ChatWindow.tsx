@@ -1,20 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Message from './Message';
-
-interface MessageType {
-  id: number;
-  text: string;
-  sender: 'user' | 'bot';
-  timestamp: string;
-}
+import { useChat } from '../context/ChatContext';
 
 const ChatWindow: React.FC = () => {
-  const [messages, setMessages] = useState<MessageType[]>(() => {
-    const saved = localStorage.getItem('chat-messages');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { messages, setMessages, botTyping, setBotTyping } = useChat();
   const [input, setInput] = useState('');
-  const [botTyping, setBotTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
@@ -23,28 +13,26 @@ const ChatWindow: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-    localStorage.setItem('chat-messages', JSON.stringify(messages));
   }, [messages]);
 
   const handleSend = () => {
     if (input.trim() === '') return;
 
-    const newMessage: MessageType = {
+    const newMessage = {
       id: Date.now(),
       text: input,
-      sender: 'user',
+      sender: 'user' as const,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
     setMessages((prev) => [...prev, newMessage]);
     setInput('');
 
     setBotTyping(true);
-    // Bot echo after short delay
     setTimeout(() => {
-      const botMessage: MessageType = {
+      const botMessage = {
         id: Date.now(),
         text: `You said: ${newMessage.text}`,
-        sender: 'bot',
+        sender: 'bot' as const,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, botMessage]);
@@ -65,8 +53,8 @@ const ChatWindow: React.FC = () => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 w-96">
-      <div className="h-64 overflow-y-auto mb-4 border p-2 rounded">
+    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-4 w-96 text-gray-900 dark:text-gray-100">
+      <div className="h-64 overflow-y-auto mb-4 border p-2 rounded dark:border-gray-600">
         {messages.map((msg) => (
           <Message key={msg.id} text={msg.text} sender={msg.sender} timestamp={msg.timestamp} />
         ))}
@@ -81,7 +69,7 @@ const ChatWindow: React.FC = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
-          className="flex-grow border rounded-l px-2 py-1"
+          className="flex-grow border rounded-l px-2 py-1 dark:bg-gray-700"
           placeholder="Type a message... (Enter to send, Shift+Enter for newline)"
         />
         <button

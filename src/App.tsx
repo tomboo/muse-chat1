@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ChatWindow from './components/ChatWindow';
+import { ChatProvider } from './context/ChatContext';
+import DarkModeToggle from './components/DarkModeToggle';
 
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <ChatWindow />
-    </div>
+    <ChatProvider>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <DarkModeToggle />
+        <ChatWindow />
+      </div>
+    </ChatProvider>
   );
 }
 
