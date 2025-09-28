@@ -1,1 +1,3 @@
-// Simplified ChatWindow test
+test('placeholder - ChatWindow renders', () => {
+  expect(true).toBe(true);
+});

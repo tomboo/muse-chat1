@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { loadMessages, saveMessages } from '../utils/storage';
+import React, { createContext, useContext, useState } from 'react';
 
-interface MessageType {
-  id: number;
+export interface MessageType {
+  id: string;
   text: string;
   sender: 'user' | 'bot';
   timestamp: string;
@@ -10,23 +9,26 @@ interface MessageType {
 
 interface ChatContextType {
   messages: MessageType[];
-  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>;
-  botTyping: boolean;
-  setBotTyping: React.Dispatch<React.SetStateAction<boolean>>;
+  addMessage: (text: string) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-export const ChatProvider = ({ children }: { children: ReactNode }) => {
-  const [messages, setMessages] = useState<MessageType[]>(() => loadMessages());
-  const [botTyping, setBotTyping] = useState(false);
+export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
-  useEffect(() => {
-    saveMessages(messages);
-  }, [messages]);
+  const addMessage = (text: string) => {
+    const newMessage: MessageType = {
+      id: `${Date.now()}-${messages.length}`,
+      text,
+      sender: 'user',
+      timestamp: new Date().toLocaleTimeString(),
+    };
+    setMessages((prev) => [...prev, newMessage]);
+  };
 
   return (
-    <ChatContext.Provider value={{ messages, setMessages, botTyping, setBotTyping }}>
+    <ChatContext.Provider value={{ messages, addMessage }}>
       {children}
     </ChatContext.Provider>
   );
@@ -34,8 +36,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
 export const useChat = () => {
   const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
-  }
+  if (!context) throw new Error('useChat must be used within a ChatProvider');
   return context;
 };

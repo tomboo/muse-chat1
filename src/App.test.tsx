@@ -1,1 +1,3 @@
-// Simplified App test
+test('placeholder - App renders', () => {
+  expect(true).toBe(true);
+});

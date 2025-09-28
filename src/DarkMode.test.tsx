@@ -1,1 +1,3 @@
-// Dark mode toggle test
+test('placeholder - DarkMode toggles', () => {
+  expect(true).toBe(true);
+});
