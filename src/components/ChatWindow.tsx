@@ -22,7 +22,10 @@ const ChatWindow: React.FC = () => {
       id: Date.now(),
       text: input,
       sender: 'user' as const,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
     };
     setMessages((prev) => [...prev, newMessage]);
     setInput('');
@@ -33,7 +36,10 @@ const ChatWindow: React.FC = () => {
         id: Date.now(),
         text: `You said: ${newMessage.text}`,
         sender: 'bot' as const,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       };
       setMessages((prev) => [...prev, botMessage]);
       setBotTyping(false);
@@ -56,7 +62,12 @@ const ChatWindow: React.FC = () => {
     <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-4 w-96 text-gray-900 dark:text-gray-100">
       <div className="h-64 overflow-y-auto mb-4 border p-2 rounded dark:border-gray-600">
         {messages.map((msg) => (
-          <Message key={msg.id} text={msg.text} sender={msg.sender} timestamp={msg.timestamp} />
+          <Message
+            key={msg.id}
+            text={msg.text}
+            sender={msg.sender}
+            timestamp={msg.timestamp}
+          />
         ))}
         {botTyping && (
           <div className="text-sm text-gray-500 italic">Bot is typing…</div>
@@ -79,10 +90,7 @@ const ChatWindow: React.FC = () => {
           Send
         </button>
       </div>
-      <button
-        onClick={handleClear}
-        className="text-sm text-red-500 underline"
-      >
+      <button onClick={handleClear} className="text-sm text-red-500 underline">
         Clear conversation
       </button>
     </div>
