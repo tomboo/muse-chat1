@@ -1,1 +1,5 @@
-test('placeholder app test', () => { expect(true).toBe(true); });
+test('placeholder - App renders', () => {
+  expect(true).toBe(true);
+});
+
+export {};

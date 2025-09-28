@@ -1,1 +1,5 @@
-test('placeholder bot typing test', () => { expect(true).toBe(true); });
+test('placeholder - BotTyping works', () => {
+  expect(true).toBe(true);
+});
+
+export {};

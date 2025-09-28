@@ -24,7 +24,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sender: 'user',
       timestamp: new Date().toLocaleTimeString(),
     };
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages((prev: MessageType[]) => [...prev, newMessage]);
   };
 
   return (
@@ -39,3 +39,5 @@ export const useChat = () => {
   if (!context) throw new Error('useChat must be used within a ChatProvider');
   return context;
 };
+
+export {};

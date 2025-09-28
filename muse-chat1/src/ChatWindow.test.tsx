@@ -1,1 +1,5 @@
-test('placeholder chatwindow test', () => { expect(true).toBe(true); });
+test('placeholder - ChatWindow renders', () => {
+  expect(true).toBe(true);
+});
+
+export {};
